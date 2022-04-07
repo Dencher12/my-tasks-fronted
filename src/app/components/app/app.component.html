@@ -1,0 +1,53 @@
+<div *ngIf="isCreateWindowOpen" class="modal-window">
+  <div (click)="toggleCreateWindow()" class="curtain"></div>
+  <mat-card class="modal-card">
+    <mat-card-title>НОВАЯ ЗАДАЧА</mat-card-title>
+    <form [formGroup]="newTodoForm">
+      <mat-card-content>
+        <mat-form-field formGroupName="todo" appearance="fill">
+          <mat-label>Название задачи</mat-label>
+          <input matInput formControlName="text">
+        </mat-form-field>
+        <mat-form-field formGroupName="project" appearance="fill">
+          <mat-label>Категория</mat-label>
+          <mat-select formControlName="id">
+            <mat-option (click)="toggleNewFieldShown()">Новая категория</mat-option>
+            <mat-option *ngFor="let project of projects"  (click)="isNewProjectFieldShown = false" [value]="project.id" >
+              {{ project.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="isNewProjectFieldShown" formGroupName="project" appearance="fill">
+          <mat-label>Название категории</mat-label>
+          <input matInput formControlName="title">
+        </mat-form-field>
+        <div class="controls">
+          <button class="button" (click)="toggleCreateWindow()" mat-button mat-raised-button>ОТМЕНА</button>
+          <button class="button" mat-button mat-raised-button color="primary" (click)="submit()">ОК</button>
+        </div>
+      </mat-card-content>
+    </form>
+  </mat-card>
+</div>
+
+<mat-toolbar>
+  <span class="title">Задачи</span>
+  <button class="add-button" (click)="toggleCreateWindow()" mat-button>+</button>
+</mat-toolbar>
+
+<content>
+  <mat-card *ngFor="let project of projects">
+    <mat-card-title>{{ project.title }}</mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div *ngFor="let todo of project.todos">
+        <mat-checkbox (change)="updateTodo(project, todo)" [checked]="todo.isCompleted">
+          <span [ngClass]="{'crossed': todo.isCompleted}">{{ todo.text }}</span>
+        </mat-checkbox>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</content>
+
+
+
